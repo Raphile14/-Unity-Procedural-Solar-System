@@ -5,6 +5,11 @@ using UnityEngine;
 public class Planet : MonoBehaviour
 {
     // Public Values
+    [Header("Planet Settings")]
+    public float RotationSpeed;
+    public float OrbitSpeed;
+    public float TiltAngle;
+
     [Range(2, 256)]
     public int resolution = 10;
     public bool autoUpdate = true;
@@ -33,6 +38,12 @@ public class Planet : MonoBehaviour
         GeneratePlanet();
     }
 
+    public void Generate()
+    {
+        Initialize();
+        GeneratePlanet();
+    }
+
     void Initialize()
     {
         shapeGenerator.UpdateSettings(shapeSettings);
@@ -46,22 +57,28 @@ public class Planet : MonoBehaviour
 
         Vector3[] directions = { Vector3.up, Vector3.down, Vector3.left, Vector3.right, Vector3.forward, Vector3.back };
 
-        for (int i = 0; i < 6; i++)
-        {
-            if (meshFilters[i] == null) 
-            {
-                GameObject meshObj = new GameObject("Face " + FaceNames[i]);
-                meshObj.transform.parent = transform;
+        if (transform != null)
+        {        
+            for (int i = 0; i < 6; i++)
+            {            
+                if (meshFilters[i] == null) 
+                {
+                    GameObject meshObj = new GameObject("Face " + FaceNames[i]);
+                    meshObj.transform.parent = transform;
 
-                meshObj.AddComponent<MeshRenderer>();
-                meshFilters[i] = meshObj.AddComponent<MeshFilter>();
-                meshFilters[i].sharedMesh = new Mesh();
+                    meshObj.AddComponent<MeshRenderer>();
+                    meshFilters[i] = meshObj.AddComponent<MeshFilter>();                                 
+                }
+                if (meshFilters[i].sharedMesh == null)
+                {
+                    meshFilters[i].sharedMesh = new Mesh();
+                }
+                meshFilters[i].GetComponent<MeshRenderer>().sharedMaterial = colorSettings.planetMaterial;
+
+                terrainFaces[i] = new TerrainFace(shapeGenerator, meshFilters[i].sharedMesh, resolution, directions[i]);
+                bool renderFace = faceRenderMask == FaceRenderMask.All || (int)faceRenderMask - 1 == i;
+                meshFilters[i].gameObject.SetActive(renderFace);
             }
-            meshFilters[i].GetComponent<MeshRenderer>().sharedMaterial = colorSettings.planetMaterial;
-
-            terrainFaces[i] = new TerrainFace(shapeGenerator, meshFilters[i].sharedMesh, resolution, directions[i]);
-            bool renderFace = faceRenderMask == FaceRenderMask.All || (int)faceRenderMask - 1 == i;
-            meshFilters[i].gameObject.SetActive(renderFace);
         }
     }
 
@@ -113,5 +130,20 @@ public class Planet : MonoBehaviour
                 terrainFaces[i].UpdateUVs(colorGenerator);
             }
         }
+    }
+
+    public void SetRotationSpeed(float value)
+    {
+        RotationSpeed = value;
+    }
+
+    public void SetOrbitSpeed(float value)
+    {
+        OrbitSpeed = value;
+    }
+
+    public void SetTiltAngle(float value)
+    {
+        TiltAngle = value;
     }
 }
