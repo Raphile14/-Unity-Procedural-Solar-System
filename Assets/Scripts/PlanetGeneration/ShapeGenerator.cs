@@ -11,10 +11,10 @@ public class ShapeGenerator
     public void UpdateSettings(ShapeSettings settings)
     {
         this.settings = settings;
-        noiseFilters = new INoiseFilter[settings.noiseLayers.Length];
+        noiseFilters = new INoiseFilter[settings.noiseLayers.Length];        
         for (int i = 0; i < noiseFilters.Length; i++)
         {
-            noiseFilters[i] = NoiseFilterFactory.CreateNoiseFilter(settings.noiseLayers[i].noiseSettings);
+            noiseFilters[i] = NoiseFilterFactory.CreateNoiseFilter(settings.noiseLayers[i].noiseSettings);            
         }
         elevationMinMax = new MinMax();
     }

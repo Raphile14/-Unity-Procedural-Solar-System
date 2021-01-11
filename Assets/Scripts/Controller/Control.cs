@@ -23,8 +23,11 @@ public class Control : MonoBehaviour
 
     [Header("Solar System Details")]
     [ReadOnly]
-    public Planet[] Planets;
-    public GameObject[] Guides;
+    public Planet[] Planets;    
+
+    [Header("Planet Settings")]
+    public int MaxBiomes = 3;
+    public float MaxRadius = 20f;
 
     [Header("Other Misc Values")]
     public int RandomSeedStringLength = 10;    
@@ -47,11 +50,6 @@ public class Control : MonoBehaviour
         Debug.Log("Fully Setup!");
     }
 
-    private void Update()
-    {
-        UpdatePlanets();
-    }
-
     private void Init()
     {
         // Generate a random string seed if input is null or empty
@@ -66,25 +64,29 @@ public class Control : MonoBehaviour
 
     private void GeneratePlanets()
     {
-        Planets = new Planet[NumberOfPlanets];
-        Guides = new GameObject[Planets.Length];
+        Planets = new Planet[NumberOfPlanets];           
 
         for (int i = 0; i < Planets.Length; i++)
-        {
-            GameObject planetGuide = new GameObject("Planet: " + (i + 1));            
-            planetGuide.transform.parent = GameObject.Find("[Planets]").transform;
-            GameObject planetObj = Instantiate(PlanetPrefab, new Vector3(Random.Range(-PlanetMaxDistance, PlanetMaxDistance), 0, 0), Quaternion.identity);            
-            planetObj.name = "Model";
-            planetObj.transform.parent = planetGuide.transform;
-            planetObj.GetComponent<Planet>().Generate();
+        {                                 
+            //planetGuide.transform.position = new Vector3(Random.Range(-PlanetMaxDistance, PlanetMaxDistance), Random.Range(-PlanetMaxDistance, PlanetMaxDistance), Random.Range(-PlanetMaxDistance, PlanetMaxDistance));
+            GameObject planetObj = Instantiate(PlanetPrefab, new Vector3(0, 0, 0), Quaternion.identity);            
+            planetObj.name = "Planet: " + (i + 1);
+            planetObj.transform.parent = GameObject.Find("[Planets]").transform;                       
             float RotationSpeed = Random.Range(-MaxRotationSpeed, MaxRotationSpeed);
             float OrbitSpeed = Random.Range(-MaxOrbitSpeed, MaxOrbitSpeed);
             float TiltAngle = Random.Range(-MaxTiltAngle, MaxTiltAngle);
+            int BiomeCount = Random.Range(1, MaxBiomes);
+            int NoiseLayerCount = Random.Range(1, 8);
+            float Radius = Random.Range(1, MaxRadius);
             planetObj.GetComponent<Planet>().SetRotationSpeed(RotationSpeed);
             planetObj.GetComponent<Planet>().SetOrbitSpeed(OrbitSpeed);
-            planetObj.GetComponent<Planet>().SetTiltAngle(TiltAngle);            
-            Planets[i] = planetObj.GetComponent<Planet>();
-            Guides[i] = planetGuide;
+            planetObj.GetComponent<Planet>().SetTiltAngle(TiltAngle);
+            planetObj.GetComponent<Planet>().SetBiomeCount(BiomeCount);
+            planetObj.GetComponent<Planet>().SetNoiseLayerCount(NoiseLayerCount);
+            planetObj.GetComponent<Planet>().SetPlanetRadius(Radius);
+            planetObj.GetComponent<Planet>().Generate();
+            planetObj.transform.position = new Vector3(Random.Range(-PlanetMaxDistance, PlanetMaxDistance), Random.Range(-PlanetMaxDistance, PlanetMaxDistance), Random.Range(-PlanetMaxDistance, PlanetMaxDistance));
+            Planets[i] = planetObj.GetComponent<Planet>();            
         }
     }
 
@@ -98,14 +100,5 @@ public class Control : MonoBehaviour
             RandomString = RandomString + Characters[Random.Range(0, Characters.Length)];
         }
         return RandomString;
-    }
-    
-    private void UpdatePlanets()
-    {
-        for (int i = 0; i < Planets.Length; i++)
-        {
-            Planets[i].transform.Rotate(0, Planets[i].RotationSpeed * Time.deltaTime, 0);
-            Guides[i].transform.Rotate(0, Planets[i].OrbitSpeed * Time.deltaTime, 0);            
-        }
-    }
+    }   
 }

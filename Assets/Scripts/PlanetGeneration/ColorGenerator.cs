@@ -15,7 +15,7 @@ public class ColorGenerator
         if (texture == null || texture.height != settings.biomeColorSettings.biomes.Length)
         {
             texture = new Texture2D(textureResolution * 2, settings.biomeColorSettings.biomes.Length, TextureFormat.RGBA32, false);
-        }
+        }        
         biomeNoiseFilter = NoiseFilterFactory.CreateNoiseFilter(settings.biomeColorSettings.noise);
     }
 
@@ -53,7 +53,7 @@ public class ColorGenerator
             {
                 Color gradientColor;
                 if (i < textureResolution)
-                {
+                {                    
                     gradientColor = settings.oceanColor.Evaluate(i / (textureResolution - 1f));
                 }
                 else

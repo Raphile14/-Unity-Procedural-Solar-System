@@ -9,6 +9,9 @@ public class Planet : MonoBehaviour
     public float RotationSpeed;
     public float OrbitSpeed;
     public float TiltAngle;
+    public int BiomeCount;
+    public int NoiseLayerCount;
+    public float PlanetRadius;
 
     [Range(2, 256)]
     public int resolution = 10;
@@ -16,6 +19,8 @@ public class Planet : MonoBehaviour
     public enum FaceRenderMask { All, Top, Bottom, Left, Right, Front, Back};
     public FaceRenderMask faceRenderMask;
 
+    [Header("Requirements")]
+    public Shader shader;
     public ShapeSettings shapeSettings;
     public ColorSettings colorSettings;
 
@@ -27,47 +32,51 @@ public class Planet : MonoBehaviour
     // Private Values
     [SerializeField, HideInInspector]
     MeshFilter[] meshFilters;
+    MeshCollider[] meshColliders;
     TerrainFace[] terrainFaces;
     ShapeGenerator shapeGenerator = new ShapeGenerator();
     ColorGenerator colorGenerator = new ColorGenerator();
     string[] FaceNames = { "Top", "Bottom", "Left", "Right", "Front", "Back" };
 
-    private void OnValidate()
-    {
-        Initialize();
-        GeneratePlanet();
-    }
-
     public void Generate()
     {
         Initialize();
         GeneratePlanet();
-    }
+    }    
 
     void Initialize()
-    {
+    {        
+        colorSettings = (ColorSettings) ScriptableObject.CreateInstance("ColorSettings");
+        colorSettings.InitColorSettings(new Material(shader), BiomeCount);        
+        shapeSettings = (ShapeSettings) ScriptableObject.CreateInstance("ShapeSettings");
+        shapeSettings.InitShapeSettings(NoiseLayerCount, PlanetRadius);
         shapeGenerator.UpdateSettings(shapeSettings);
         colorGenerator.UpdateSettings(colorSettings);
 
         if (meshFilters == null || meshFilters.Length == 0)
         {
             meshFilters = new MeshFilter[6];
-        }        
+        }
+        if (meshColliders == null || meshColliders.Length == 0)
+        {
+            meshColliders = new MeshCollider[6];
+        }
         terrainFaces = new TerrainFace[6];
 
         Vector3[] directions = { Vector3.up, Vector3.down, Vector3.left, Vector3.right, Vector3.forward, Vector3.back };
 
         if (transform != null)
-        {        
+        {
             for (int i = 0; i < 6; i++)
-            {            
-                if (meshFilters[i] == null) 
+            {
+                if (meshFilters[i] == null)
                 {
                     GameObject meshObj = new GameObject("Face " + FaceNames[i]);
                     meshObj.transform.parent = transform;
 
-                    meshObj.AddComponent<MeshRenderer>();
-                    meshFilters[i] = meshObj.AddComponent<MeshFilter>();                                 
+                    meshObj.AddComponent<MeshRenderer>();                    
+                    meshFilters[i] = meshObj.AddComponent<MeshFilter>();
+                    meshColliders[i] = meshObj.AddComponent<MeshCollider>();
                 }
                 if (meshFilters[i].sharedMesh == null)
                 {
@@ -75,7 +84,7 @@ public class Planet : MonoBehaviour
                 }
                 meshFilters[i].GetComponent<MeshRenderer>().sharedMaterial = colorSettings.planetMaterial;
 
-                terrainFaces[i] = new TerrainFace(shapeGenerator, meshFilters[i].sharedMesh, resolution, directions[i]);
+                terrainFaces[i] = new TerrainFace(shapeGenerator, meshFilters[i].sharedMesh, meshColliders[i], resolution, directions[i]);
                 bool renderFace = faceRenderMask == FaceRenderMask.All || (int)faceRenderMask - 1 == i;
                 meshFilters[i].gameObject.SetActive(renderFace);
             }
@@ -145,5 +154,20 @@ public class Planet : MonoBehaviour
     public void SetTiltAngle(float value)
     {
         TiltAngle = value;
+    }
+
+    public void SetBiomeCount(int value)
+    {
+        BiomeCount = value;
+    }
+
+    public void SetNoiseLayerCount(int value)
+    {
+        NoiseLayerCount = value;
+    }    
+
+    public void SetPlanetRadius(float value)
+    {
+        PlanetRadius = value;
     }
 }
