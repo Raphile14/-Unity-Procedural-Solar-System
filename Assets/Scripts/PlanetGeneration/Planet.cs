@@ -73,10 +73,11 @@ public class Planet : MonoBehaviour
                 {
                     GameObject meshObj = new GameObject("Face " + FaceNames[i]);
                     meshObj.transform.parent = transform;
-
+                    meshObj.transform.localPosition = Vector3.zero;
                     meshObj.AddComponent<MeshRenderer>();                    
                     meshFilters[i] = meshObj.AddComponent<MeshFilter>();
                     meshColliders[i] = meshObj.AddComponent<MeshCollider>();
+                    meshColliders[i].convex = true;
                 }
                 if (meshFilters[i].sharedMesh == null)
                 {
@@ -86,7 +87,7 @@ public class Planet : MonoBehaviour
 
                 terrainFaces[i] = new TerrainFace(shapeGenerator, meshFilters[i].sharedMesh, meshColliders[i], resolution, directions[i]);
                 bool renderFace = faceRenderMask == FaceRenderMask.All || (int)faceRenderMask - 1 == i;
-                meshFilters[i].gameObject.SetActive(renderFace);
+                meshFilters[i].gameObject.SetActive(renderFace);                
             }
         }
     }

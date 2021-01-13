@@ -18,8 +18,8 @@ public class Control : MonoBehaviour
     public int NumberOfPlanets;
     [ReadOnly]
     public int NumberOfSuns;
-    public float PlanetMaxDistance = 200f;
-    public float PlanetMinDistance = 10f;
+    public float MaxPlanetDistance = 500f;
+    public float MinPlanetDistance = 400f;
 
     [Header("Solar System Details")]
     [ReadOnly]
@@ -34,19 +34,25 @@ public class Control : MonoBehaviour
 
     // Prefabs
     public GameObject PlanetPrefab;
-
+    
     // Private Values
     string[] Characters = new string[] {
         "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
         "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
     };
     int HashSeed;
+    float CurrentDistance = 0;
 
     // Start is called before the first frame update
     void Start()
     {
         Init();
         GeneratePlanets();
+
+        for (int i = 0; i < Planets.Length; i++)
+        {
+            Planets[i].gameObject.GetComponent<Gravity>().enabled = true;
+        }
         Debug.Log("Fully Setup!");
     }
 
@@ -67,11 +73,13 @@ public class Control : MonoBehaviour
         Planets = new Planet[NumberOfPlanets];           
 
         for (int i = 0; i < Planets.Length; i++)
-        {                                 
-            //planetGuide.transform.position = new Vector3(Random.Range(-PlanetMaxDistance, PlanetMaxDistance), Random.Range(-PlanetMaxDistance, PlanetMaxDistance), Random.Range(-PlanetMaxDistance, PlanetMaxDistance));
+        {
+            float dist = Random.Range(MinPlanetDistance, MaxPlanetDistance);
+            CurrentDistance += dist;
             GameObject planetObj = Instantiate(PlanetPrefab, new Vector3(0, 0, 0), Quaternion.identity);            
             planetObj.name = "Planet: " + (i + 1);
-            planetObj.transform.parent = GameObject.Find("[Planets]").transform;                       
+            planetObj.transform.parent = GameObject.Find("[Planets]").transform;
+            planetObj.transform.localPosition = new Vector3(CurrentDistance, 0, 0);            
             float RotationSpeed = Random.Range(-MaxRotationSpeed, MaxRotationSpeed);
             float OrbitSpeed = Random.Range(-MaxOrbitSpeed, MaxOrbitSpeed);
             float TiltAngle = Random.Range(-MaxTiltAngle, MaxTiltAngle);
@@ -84,8 +92,7 @@ public class Control : MonoBehaviour
             planetObj.GetComponent<Planet>().SetBiomeCount(BiomeCount);
             planetObj.GetComponent<Planet>().SetNoiseLayerCount(NoiseLayerCount);
             planetObj.GetComponent<Planet>().SetPlanetRadius(Radius);
-            planetObj.GetComponent<Planet>().Generate();
-            planetObj.transform.position = new Vector3(Random.Range(-PlanetMaxDistance, PlanetMaxDistance), Random.Range(-PlanetMaxDistance, PlanetMaxDistance), Random.Range(-PlanetMaxDistance, PlanetMaxDistance));
+            planetObj.GetComponent<Planet>().Generate();                        
             Planets[i] = planetObj.GetComponent<Planet>();            
         }
     }

@@ -176,10 +176,9 @@ MonoBehaviour:
   MaxTiltAngle: 50
   NumberOfPlanets: 0
   NumberOfSuns: 0
-  PlanetMaxDistance: 200
-  PlanetMinDistance: 10
+  MaxPlanetDistance: 500
+  MinPlanetDistance: 400
   Planets: []
-  Guides: []
   MaxBiomes: 3
   MaxRadius: 20
   RandomSeedStringLength: 10
