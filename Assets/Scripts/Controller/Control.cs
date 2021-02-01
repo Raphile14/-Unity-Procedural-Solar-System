@@ -37,11 +37,11 @@ public class Control : MonoBehaviour
     public static int MinNumLayers = 1;
     public static int MaxNumLayers = 8;
     public static float MinBaseRoughness = 0.1f;
-    public static float MaxBaseRoughness = 1f;
-    public static float MinRoughness = 0.1f;
+    public static float MaxBaseRoughness = 0.5f;
+    public static float MinRoughness = 0.5f;
     public static float MaxRoughness = 1f;
     public static float MinPersistence = 0.1f;
-    public static float MaxPersistence = 1f;
+    public static float MaxPersistence = 0.5f;
     public static float MinWeightMultiplier = 0.1f;
     public static float MaxWeightMultiplier = 1f;
 

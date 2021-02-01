@@ -166,7 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c44b1214c095b4a8acf9a7181eca84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Seed: 
+  Seed: 123
   MinNumberOfPlanets: 5
   MaxNumberOfPlanets: 10
   MinNumberOfSuns: 1

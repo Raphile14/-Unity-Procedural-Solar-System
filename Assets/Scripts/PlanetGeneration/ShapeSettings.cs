@@ -46,6 +46,11 @@ public class ShapeSettings : ScriptableObject
             noiseLayers[i].noiseSettings.simpleNoiseSettings.persistence = Random.Range(Control.MinPersistence, Control.MaxPersistence);
 
             // Generate Values for Ridgid Noise
+            noiseLayers[i].noiseSettings.ridgidNoiseSettings.strength = Random.Range(Control.MinStrength, Control.MaxStrength);
+            noiseLayers[i].noiseSettings.ridgidNoiseSettings.numLayers = Random.Range(Control.MinNumLayers, Control.MaxNumLayers);
+            noiseLayers[i].noiseSettings.ridgidNoiseSettings.baseRoughness = Random.Range(Control.MinBaseRoughness, Control.MaxBaseRoughness);
+            noiseLayers[i].noiseSettings.ridgidNoiseSettings.roughness = Random.Range(Control.MinRoughness, Control.MaxRoughness);
+            noiseLayers[i].noiseSettings.ridgidNoiseSettings.persistence = Random.Range(Control.MinPersistence, Control.MaxPersistence);
             noiseLayers[i].noiseSettings.ridgidNoiseSettings.weightMultiplier = Random.Range(Control.MinWeightMultiplier, Control.MaxWeightMultiplier);
         }
     }
