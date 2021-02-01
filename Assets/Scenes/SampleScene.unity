@@ -167,8 +167,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Seed: 
-  MinNumberOfPlanets: 2
-  MaxNumberOfPlanets: 5
+  MinNumberOfPlanets: 5
+  MaxNumberOfPlanets: 10
   MinNumberOfSuns: 1
   MaxNumberOfSuns: 1
   MaxRotationSpeed: 10
@@ -181,6 +181,7 @@ MonoBehaviour:
   Planets: []
   MaxBiomes: 3
   MaxRadius: 20
+  NumberNoiseLayerCount: 4
   RandomSeedStringLength: 10
   PlanetPrefab: {fileID: 5473121424688924962, guid: 66443d7091cb0184ba37566761e79ea5, type: 3}
 --- !u!1 &518274600

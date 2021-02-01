@@ -5,8 +5,10 @@ using UnityEngine;
 [CreateAssetMenu()]
 public class ShapeSettings : ScriptableObject
 {
+    [Header("Planet Details")]
     public float planetRadius = 1;
     public NoiseLayer[] noiseLayers;
+    public float RidgidNoiseLayerChance = 50f;    
 
     public void InitShapeSettings(int NoiseLayerCount, float PlanetRadius)
     {
@@ -21,8 +23,30 @@ public class ShapeSettings : ScriptableObject
         {
             noiseLayers[i] = new NoiseLayer();
             noiseLayers[i].noiseSettings = new NoiseSettings();
+
+            // Generate Type of Noise
+            if (RidgidNoiseLayerChance < Random.Range(0, 100))
+            {
+                noiseLayers[i].noiseSettings.filterType = NoiseSettings.FilterType.Ridgid;
+            }        
+            else
+            {
+                noiseLayers[i].noiseSettings.filterType = NoiseSettings.FilterType.Simple;
+            }
+
+            // Generate needed Noise Settings            
             noiseLayers[i].noiseSettings.simpleNoiseSettings = new NoiseSettings.SimpleNoiseSettings();
             noiseLayers[i].noiseSettings.ridgidNoiseSettings = new NoiseSettings.RidgidNoiseSettings();
+            
+            // Generate Values for Simple Noise
+            noiseLayers[i].noiseSettings.simpleNoiseSettings.strength = Random.Range(Control.MinStrength, Control.MaxStrength);
+            noiseLayers[i].noiseSettings.simpleNoiseSettings.numLayers = Random.Range(Control.MinNumLayers, Control.MaxNumLayers);
+            noiseLayers[i].noiseSettings.simpleNoiseSettings.baseRoughness = Random.Range(Control.MinBaseRoughness, Control.MaxBaseRoughness);
+            noiseLayers[i].noiseSettings.simpleNoiseSettings.roughness = Random.Range(Control.MinRoughness, Control.MaxRoughness);
+            noiseLayers[i].noiseSettings.simpleNoiseSettings.persistence = Random.Range(Control.MinPersistence, Control.MaxPersistence);
+
+            // Generate Values for Ridgid Noise
+            noiseLayers[i].noiseSettings.ridgidNoiseSettings.weightMultiplier = Random.Range(Control.MinWeightMultiplier, Control.MaxWeightMultiplier);
         }
     }
 
@@ -33,5 +57,4 @@ public class ShapeSettings : ScriptableObject
         public bool useFirstLayerAsMask = true;
         public NoiseSettings noiseSettings;
     }
-
 }

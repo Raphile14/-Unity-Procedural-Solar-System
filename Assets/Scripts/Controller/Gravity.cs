@@ -42,7 +42,7 @@ public class Gravity : MonoBehaviour
 
         if (distance == 0f) return;
 
-        float forceMagnitude = G * (rb.mass * rbToAttract.mass) / Mathf.Pow(distance, 2) / 10000000;
+        float forceMagnitude = (rb.mass * rbToAttract.mass) / Mathf.Pow(distance, 2) / 9999999;
         Debug.Log(forceMagnitude);
         Vector3 force = direction.normalized * forceMagnitude;
         

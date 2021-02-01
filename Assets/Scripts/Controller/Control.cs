@@ -28,6 +28,22 @@ public class Control : MonoBehaviour
     [Header("Planet Settings")]
     public int MaxBiomes = 3;
     public float MaxRadius = 20f;
+    [Range(1, 8)]
+    public int NumberNoiseLayerCount = 4;
+
+    [Header("Static Noise Setting Scope")]
+    public static float MinStrength = 0.1f;
+    public static float MaxStrength = 1f;
+    public static int MinNumLayers = 1;
+    public static int MaxNumLayers = 8;
+    public static float MinBaseRoughness = 0.1f;
+    public static float MaxBaseRoughness = 1f;
+    public static float MinRoughness = 0.1f;
+    public static float MaxRoughness = 1f;
+    public static float MinPersistence = 0.1f;
+    public static float MaxPersistence = 1f;
+    public static float MinWeightMultiplier = 0.1f;
+    public static float MaxWeightMultiplier = 1f;
 
     [Header("Other Misc Values")]
     public int RandomSeedStringLength = 10;    
@@ -51,7 +67,7 @@ public class Control : MonoBehaviour
 
         for (int i = 0; i < Planets.Length; i++)
         {
-            Planets[i].gameObject.GetComponent<Gravity>().enabled = true;
+            Planets[i].gameObject.GetComponent<Gravity>().enabled = false;
         }
         Debug.Log("Fully Setup!");
     }
@@ -84,13 +100,12 @@ public class Control : MonoBehaviour
             float OrbitSpeed = Random.Range(-MaxOrbitSpeed, MaxOrbitSpeed);
             float TiltAngle = Random.Range(-MaxTiltAngle, MaxTiltAngle);
             int BiomeCount = Random.Range(1, MaxBiomes);
-            int NoiseLayerCount = Random.Range(1, 8);
             float Radius = Random.Range(1, MaxRadius);
             planetObj.GetComponent<Planet>().SetRotationSpeed(RotationSpeed);
             planetObj.GetComponent<Planet>().SetOrbitSpeed(OrbitSpeed);
             planetObj.GetComponent<Planet>().SetTiltAngle(TiltAngle);
             planetObj.GetComponent<Planet>().SetBiomeCount(BiomeCount);
-            planetObj.GetComponent<Planet>().SetNoiseLayerCount(NoiseLayerCount);
+            planetObj.GetComponent<Planet>().SetNoiseLayerCount(NumberNoiseLayerCount);
             planetObj.GetComponent<Planet>().SetPlanetRadius(Radius);
             planetObj.GetComponent<Planet>().Generate();                        
             Planets[i] = planetObj.GetComponent<Planet>();            
